@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Landmark Classification & Tagging for Social Media</title>
+    <style>
+        /* Reset some default styles for better consistency */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure the container takes at least the full viewport height */
+        }
+
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            flex-grow: 1; /* Grow to fill available space */
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="file"] {
+            display: none; /* Hide the default input */
+            padding: 10px;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px; /* Add some vertical spacing */
+        }
+
+        .custom-file-upload {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #444;
+        }
+
+        button[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-top: 10px;
+            font-size: 18px;
+            display: flex; /* Add display: flex to control the layout */
+            justify-content: space-between; /* Align classes and probabilities */
+            align-items: center; /* Vertically center content */
+        }
+        
+        /* Add a class for highlighting */
+        .highlight {
+            background-color: yellow; /* You can choose any highlight color */
+        }
+
+        .image-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* ... (other styles) ... */
+
+        img {
+            max-width: 50%; /* Set maximum width for the image */
+            height: auto; /* Maintain the aspect ratio of the image */
+            margin-top: 20px; /* Add some spacing below the image */
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            flex-shrink: 0; /* Prevent footer from shrinking */
+        }
+        
+        /* Additional styles for app description */
+        .app-description {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* ... (other styles) ... */
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Landmark Classification & Tagging for Social Media</h1>
+    </div>
+    <div class="container">
+        <div class="app-description">
+            <p>
+                Introducing our Landmark Classifier App: Your gateway to effortless photo tagging and organization! Our app utilizes cutting-edge machine learning techniques to automatically classify landmarks in your photos, even when location metadata is missing. Whether your photos lack GPS data or were taken on older devices, our app has you covered. With features like data preprocessing, augmentation, and custom CNN design, you'll experience seamless organization and tagging. We've also integrated transfer learning to provide you with the best results, comparing them to our in-house CNN model. Say goodbye to manual tagging and hello to smarter, more efficient photo management with our Landmark Classifier App.
+            </p>
+        </div>
+        <form method="POST" enctype="multipart/form-data">
+            <h2>Upload an Image</h2>
+            <div class="flex-container">
+                <label class="custom-file-upload">
+                    Choose File
+                    <input type="file" name="file" accept="image/*" required>
+                </label> 
+                <button type="submit">Classify</button>
+            </div>
+        </form>
+
+        <div class="image-section">
+            {% if image_path %}
+            <h2>Uploaded Image:</h2>
+            <img src="{{ image_path }}" alt="Uploaded Image">
+            {% endif %}
+        </div>
+
+        {% if classes %}
+        <h2>Top 5 Predictions:</h2>
+        <ul>
+            {% for i in range(5) %}
+            <!-- Check if this class has the highest probability -->
+            {% if probs[i] == max_prob %}
+            <li class="highlight">
+            {% else %}
+            <li>
+            {% endif %}
+                <span class="class-name">{{ classes[i] }}</span>
+                <span class="probability">Probability: {{ '%.2f' % probs[i] }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    <footer>
+        &copy; 2023 Landmark Classifier App
+    </footer>
+</body>
+</html>
